@@ -1,5 +1,14 @@
+
+
+
+"use client"
+
+import authService from "@/appwrite/authService";
+import { login, logout } from "@/store/features/authSlice";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 export default function LoginForm() {
   const {
@@ -8,20 +17,37 @@ export default function LoginForm() {
     formState: { errors , isSubmitting },
   } = useForm();
 
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+
+  const userLogin = async(data) => {
+    const isUserLoggedIn = await authService.login(data)
+    if(isUserLoggedIn){
+      console.log(isUserLoggedIn)
+      dispatch(login())
+      router.replace("/create-user")
+      alert("Login Successfull")
+    }else{
+      dispatch(logout())
+      alert("Login Failed")
+    }
+  }
+
   // Submit function
   const onSubmit = (data) => {
     console.log(data);
+    userLogin(data)
   };
 
   return (
     <div>
       {/* <h2>Sign Up</h2> */}
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col">
         {/* Email Input */}
-        <div className="form-field">
           <label htmlFor="email">Email:</label>
           <input
-            className="border bg-black"
+            className="bg-black border border-gray-300"
             type="email"
             id="email"
             {...register("email", {
@@ -33,10 +59,7 @@ export default function LoginForm() {
             })}
           />
           {errors.email && <p className="error-msg">{errors.email.message}</p>}
-        </div>
 
-        {/* Password Input */}
-        <div className="form-field">
           <label htmlFor="password">Password:</label>
           <input
             className="border bg-black"
@@ -53,7 +76,6 @@ export default function LoginForm() {
           {errors.password && (
             <p className="error-msg">{errors.password.message}</p>
           )}
-        </div>
 
         {/* Submit Button */}
         <button type="submit" disabled={isSubmitting}>{isSubmitting ? "Logging in..." : "Login"}</button>

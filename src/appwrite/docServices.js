@@ -15,30 +15,30 @@ class DocService {
     this.storage = new Storage(this.client);
   }
 
-  async createDocument({
-    currentUserId,
-    userImageId,
-    name,
-    contact,
-    address,
-    college,
-    studentClass,
-    studentId,
+  //create documents start
+
+  async createdUsersDocument({
+    documentId,
+    mailId,
+    password,
+    joiningDate,
+    amount,
+    lastPaymentDate,
+    duePayments,
   }) {
     {
       try {
         const response = await this.database.createDocument(
           conf.appwrite_database_id,
-          conf.appwrite_collection_id,
-          currentUserId,
+          conf.appwrite_created_users_collection_id,
+          documentId,
           {
-            userImageId,
-            name,
-            contact,
-            address,
-            college,
-            studentClass,
-            studentId,
+            mailId,
+            password,
+            joiningDate,
+            amount,
+            lastPaymentDate,
+            duePayments,
           }
         );
         return response;
@@ -47,61 +47,191 @@ class DocService {
       }
     }
   }
+  async usersInfoDocument({
+    name , 
+    mailId,
+    password,
+    contact , 
+    eContact , 
+    college, 
+    collegeId ,
+    standard ,
+    batch ,
+    address, 
+    bldGroup ,
+    
+  }) {
+    {
+      try {
+        const response = await this.database.createDocument(
+          conf.appwrite_database_id,
+          conf.appwrite_users_info_collection_id,
+          documentId,
+          {
+            mailId , 
+            name ,
+            password,
+            contact , 
+            eContact , 
+            college, 
+            collegeId ,
+            standard ,
+            batch ,
+            address, 
+            bldGroup ,
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log("Appwrite DocService :: createDocument :: error", error);
+      }
+    }
+  }
+ //create documents end
 
 
-
-  async updateDocument(currentUserId, { userImageId,name,
-    contact,
-    address,
-    college,
-    studentClass,
-    studentId}) {
+ //update documents start
+  async updateUsersInfoDocument(documentId, {  mailId , 
+    name ,
+    password,
+    contact , 
+    eContact , 
+    college, 
+    collegeId ,
+    standard ,
+    batch ,
+    address, 
+    bldGroup ,}) {
         try {
             return await this.database.updateDocument(
                 conf.appwrite_database_id,
-                conf.appwrite_collection_id,
-                currentUserId,
+                conf.appwrite_users_info_collection_id,
+                documentId,
                 {
-                  userImageId,
-                    name,
-                    contact,
-                    address,
-                    college,
-                    studentClass,
-                    studentId,
+                  mailId , 
+                  name ,
+                  password,
+                  contact , 
+                  eContact , 
+                  college, 
+                  collegeId ,
+                  standard ,
+                  batch ,
+                  address, 
+                  bldGroup ,
                 }
             )
         } catch (error) {
             
         }
 }
+  async updateCreatedUsersDocument(documentId, { mailId,
+    password,
+    joiningDate,
+    amount,
+    lastPaymentDate,
+    duePayments,}) {
+        try {
+            return await this.database.updateDocument(
+                conf.appwrite_database_id,
+                conf.appwrite_created_users_collection_id,
+                documentId,
+                {
+                  mailId,
+    password,
+    joiningDate,
+    amount,
+    lastPaymentDate,
+    duePayments,
+                }
+            )
+        } catch (error) {
+            
+        }
+}
+ //update documents end
 
-async getDocument(currentUserId) {
+
+//get documents start
+ async getUsersInfoDocument(documentId) {
+     try {
+       const response = await this.database.getDocument(
+         conf.appwrite_database_id,
+         conf.appwrite_users_info_collection_id,
+         documentId
+       );
+       return response;
+     } catch (error) {
+       console.log("Appwrite DocService :: getDocument :: error", error);
+     }
+   }
+
+
+ async getCreatedUsersDocuments() {
+   try {
+    await this.database.listDocuments(conf.appwrite_created_users_collection_id)
+   } catch (error) {
+     console.log("Appwrite DocService :: getDocuments :: error", error);
+   }
+ }
+ async getUsersInfoDocuments() {
+   try {
+    await this.database.listDocuments(conf.appwrite_users_info_collection_id)
+   } catch (error) {
+     console.log("Appwrite DocService :: getDocuments :: error", error);
+   }
+ }
+ async getCreatedUsersDocument(documentId) {
+     try {
+       const response = await this.database.getDocument(
+         conf.appwrite_database_id,
+         conf.appwrite_created_users_collection_id,
+         documentId
+       );
+       return response;
+     } catch (error) {
+       console.log("Appwrite DocService :: getDocument :: error", error);
+     }
+   }
+ //get documents end
+
+
+
+
+ //delete documents start
+async deleteCreatedUsersDocument(documentId) {
     try {
-      const response = await this.database.getDocument(
-        conf.appwrite_database_id,
-        conf.appwrite_collection_id,
-        currentUserId
-      );
-      return response;
+        const response = await this.database.deleteDocument(
+            conf.appwrite_database_id,
+            conf.appwrite_created_users_collection_id,
+            documentId
+        )
+        // if(response){
+        //    await this.deleteUsersInfoDocument(documentId)
+        //    return response
+        // }
+        return response;
     } catch (error) {
-      console.log("Appwrite DocService :: getDocument :: error", error);
+        console.log("Appwrite DocService :: deleteDocument :: error", error);
     }
-  }
 
-
-async deleteDocument(currentUserId) {
+}
+async deleteUsersInfoDocument(documentId) {
     try {
         return await this.database.deleteDocument(
             conf.appwrite_database_id,
-            conf.appwrite_collection_id,
-            currentUserId
+            conf.appwrite_created_users_collection_id,
+            documentId
         )
     } catch (error) {
         console.log("Appwrite DocService :: deleteDocument :: error", error);
     }
 
 }
+
+ //delete documents end
+
+
 
 //file upload
 async uploadFile(file) {

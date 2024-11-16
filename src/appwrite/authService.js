@@ -15,18 +15,18 @@ class AuthService {
              this.database = new ID(conf.appwrite_database_id);
     }
 
-    async createAccount({ email, password, name }) {
+    async createAccount({ email, password }) {
         try {
             const userAccount = await this.account.create(
                 ID.unique(),
                 email,
                 password,
-                name
             );
+            return userAccount
             
-            if (userAccount) {
-                return await this.login({ email, password });
-            }
+            // if (userAccount) {
+            //     return await this.login({ email, password });
+            // }
         } catch (error) {
             console.log("Appwrite AuthService :: createAccount :: error", error);
             // Provide a specific message based on error code
