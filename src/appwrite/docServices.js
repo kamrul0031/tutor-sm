@@ -17,6 +17,26 @@ class DocService {
 
   //create documents start
 
+
+  async createdDocument(collectionId,documentId,data) {
+    {
+      try {
+        const response = await this.database.createDocument(
+          conf.appwrite_database_id,
+          collectionId,
+          documentId,
+          data
+        );
+        return response;
+      } catch (error) {
+        console.log("Appwrite DocService :: createDocument :: error", error);
+      }
+    }
+  }
+
+
+
+
   async createdUsersDocument({
     documentId,
     mailId,
@@ -91,6 +111,26 @@ class DocService {
 
 
  //update documents start
+
+ async updateDocument(collectionId,documentId, { data }) {
+      try {
+          return await this.database.updateDocument(
+              conf.appwrite_database_id,
+              collectionId,
+              documentId,
+              {
+               data
+              }
+          )
+      } catch (error) {
+          
+      }
+}
+
+
+
+
+
   async updateUsersInfoDocument(documentId, {  mailId , 
     name ,
     password,
@@ -167,25 +207,25 @@ class DocService {
    }
 
 
- async getCreatedUsersDocuments() {
+ async getDocuments() {
    try {
     await this.database.listDocuments(conf.appwrite_created_users_collection_id)
    } catch (error) {
      console.log("Appwrite DocService :: getDocuments :: error", error);
    }
  }
- async getUsersInfoDocuments() {
-   try {
-    await this.database.listDocuments(conf.appwrite_users_info_collection_id)
-   } catch (error) {
-     console.log("Appwrite DocService :: getDocuments :: error", error);
-   }
- }
- async getCreatedUsersDocument(documentId) {
+//  async getUsersInfoDocuments() {
+//    try {
+//     await this.database.listDocuments(conf.appwrite_users_info_collection_id)
+//    } catch (error) {
+//      console.log("Appwrite DocService :: getDocuments :: error", error);
+//    }
+//  }
+ async getDocument(collectionId,documentId) {
      try {
        const response = await this.database.getDocument(
          conf.appwrite_database_id,
-         conf.appwrite_created_users_collection_id,
+         collectionId,
          documentId
        );
        return response;
