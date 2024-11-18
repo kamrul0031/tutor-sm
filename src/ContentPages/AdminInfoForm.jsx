@@ -1,3 +1,7 @@
+
+
+"use client"
+
 import conf from "@/appwrite/conf";
 import docService from "@/appwrite/docServices";
 import useCurrentUser from "@/custom hooks/useCurrentUser";
@@ -7,7 +11,8 @@ import { useSelector } from "react-redux";
 
 export default function AdminInfoForm() {
   useCurrentUser()
-  const currentUserId = "67389997001e7bca4e4e";
+
+  const currentUserId = useSelector((state) => (state.auth.userData))
   console.log("top currentUserId" , currentUserId)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
@@ -16,7 +21,7 @@ export default function AdminInfoForm() {
 
 
   const gettingCurrentUserDocument = async() => {
-    try{const document = await docService.getDocument(currentUserId)
+    try{const document = await docService.getDocument(conf.appwrite_admins_info_collection_id,currentUserId)
     if(document){
       setExistingDocument(document)
       alert("Admin Information already exist")

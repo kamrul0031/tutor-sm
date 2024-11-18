@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-
+import "../app/globals.css";
 export default function LoginForm() {
   const {
     register,
@@ -18,8 +18,6 @@ export default function LoginForm() {
   } = useForm();
 
   const authStatus = useSelector((state) => state.auth.authStatus);
-  const documentData = useSelector((state) => state.document.documentData);
-  console.log(documentData)
   const [isAdmin, setIsAdmin] = useState(false); // State for admin status
 
   const handleRoleChange = (event) => {
@@ -31,13 +29,25 @@ export default function LoginForm() {
   const dispatch = useDispatch();
 
 
+  const checkingIsAdminOrUser = (data) => {
+    if (data.email.includes("admin")) {
+      console.log("Admin login");
+    } else {
+      console.log("User login");
+    }
+  };
+  
+
+
   const userLogin = async(data) => {
     const isUserLoggedIn = await authService.login(data)
     if(isUserLoggedIn){
       console.log("isUserLoggedIn : ", isUserLoggedIn)
-      dispatch(login())
+      dispatch(login(isUserLoggedIn))
       if(isAdmin){  
        router.replace("/admin-dashboard")
+      }else{
+        router.replace("/user-dashboard")
       }
       alert("Successfully Logged In")
     }else{
@@ -49,7 +59,7 @@ export default function LoginForm() {
   // Submit function
   const onSubmit = (data) => {
     console.log(data);
-    userLogin(data)
+    checkingIsAdminOrUser(data)
   };
 
   return(
@@ -62,7 +72,7 @@ export default function LoginForm() {
     ) : (
       <div>
         {/* <h2>Sign Up</h2> */}
-        <div>
+        {/* <div>
         <h2>Select Role</h2>
         <div>
           <label>
@@ -91,8 +101,8 @@ export default function LoginForm() {
   
         <div>
           <p>Selected Role: {isAdmin ? "Admin" : "User"}</p>
-        </div>
-      </div>
+        </div> 
+      </div> */}
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col">
           {/* Email Input */}
             <label htmlFor="email">Email:</label>

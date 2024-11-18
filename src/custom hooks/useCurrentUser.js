@@ -1,9 +1,9 @@
-"use client";
-const { default: authService } = require("@/appwrite/authService");
-const { login, logout } = require("@/store/features/authSlice");
-const { useRouter } = require("next/router");
-const { useEffect } = require("react");
-const { useDispatch } = require("react-redux");
+
+
+import authService from "@/appwrite/authService";
+import { login, logout } from "@/store/features/authSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const useCurrentUser = () => {
   const dispatch = useDispatch();

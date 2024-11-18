@@ -10,6 +10,8 @@ export default function AdminDashboardComp() {
     
 
   useAdminDocument();
+  const currentUser = useSelector((state) => state.auth.userData);
+  console.log("currentUser", currentUser)
   const isAdminDocument = useSelector((state) => state.document.adminDocStatus);
   const adminData = useSelector((state) => state.document.adminDocumentData);
 
@@ -17,7 +19,7 @@ export default function AdminDashboardComp() {
     <>
     {isAdminDocument ? (
        <div>
-       <h1>Welcome, {adminData?.name}!</h1>
+       <h1>Welcome, {adminData?.clientNamek}!</h1>
        {/* Admin dashboard content */}
      </div>
     ) : (
