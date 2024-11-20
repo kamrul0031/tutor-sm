@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import "../app/globals.css";
+import { Input } from "@/components/ui/input";
 export default function LoginForm() {
   const {
     register,
@@ -29,13 +30,6 @@ export default function LoginForm() {
   const dispatch = useDispatch();
 
 
-  const checkingIsAdminOrUser = (data) => {
-    if (data.email.includes("admin")) {
-      console.log("Admin login");
-    } else {
-      console.log("User login");
-    }
-  };
   
 
 
@@ -44,7 +38,7 @@ export default function LoginForm() {
     if(isUserLoggedIn){
       console.log("isUserLoggedIn : ", isUserLoggedIn)
       dispatch(login(isUserLoggedIn))
-      if(isAdmin){  
+      if(data.email.includes("admin")){  
        router.replace("/admin-dashboard")
       }else{
         router.replace("/user-dashboard")
@@ -59,8 +53,11 @@ export default function LoginForm() {
   // Submit function
   const onSubmit = (data) => {
     console.log(data);
-    checkingIsAdminOrUser(data)
-  };
+
+    userLogin(data).catch((error) => {
+      console.log("error in onSubmit", error); 
+    });
+    };
 
   return(
     <>
@@ -103,10 +100,10 @@ export default function LoginForm() {
           <p>Selected Role: {isAdmin ? "Admin" : "User"}</p>
         </div> 
       </div> */}
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col ">
           {/* Email Input */}
             <label htmlFor="email">Email:</label>
-            <input
+            <Input
               className="bg-black border border-gray-300"
               type="email"
               id="email"
@@ -121,7 +118,7 @@ export default function LoginForm() {
             {errors.email && <p className="error-msg">{errors.email.message}</p>}
   
             <label htmlFor="password">Password:</label>
-            <input
+            <Input
               className="border bg-black"
               type="password"
               id="password"

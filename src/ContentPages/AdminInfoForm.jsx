@@ -5,6 +5,7 @@
 import conf from "@/appwrite/conf";
 import docService from "@/appwrite/docServices";
 import useCurrentUser from "@/custom hooks/useCurrentUser";
+import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -12,32 +13,38 @@ import { useSelector } from "react-redux";
 export default function AdminInfoForm() {
   useCurrentUser()
 
-  const currentUserId = useSelector((state) => (state.auth.userData))
+  const currentUserId = useSelector((state) => (state.auth.userData?.userId))
   console.log("top currentUserId" , currentUserId)
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
   const [existingDocument, setExistingDocument] = useState(null)
 
-
-
-  const gettingCurrentUserDocument = async() => {
-    try{const document = await docService.getDocument(conf.appwrite_admins_info_collection_id,currentUserId)
-    if(document){
-      setExistingDocument(document)
-      alert("Admin Information already exist")
-    }else{
-      alert("You need to fill the form first !")
-    }}
-    catch(error){
-      console.log("document check field " , error)
-    }
-
-  }
   useEffect(() => {
-   if(currentUserId){
-    gettingCurrentUserDocument()
-   }
-  }, [currentUserId])
+    if (currentUserId) {
+      const fetchDocument = async () => {
+        try {
+          const document = await docService.getDocument(
+            conf.appwrite_admins_info_collection_id,
+            currentUserId
+          );
+  
+          if (document) {
+            setExistingDocument(document);
+            alert("Admin Information already exists");
+          } else {
+            alert("You need to fill the form first!");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+        }
+      };
+  
+      fetchDocument();
+    }
+  }, [currentUserId]);
+
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+
+  
   
 
   const updateAdminDocument = async(data) => {
@@ -96,7 +103,7 @@ export default function AdminInfoForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Image:
-          <input
+          <Input
             className="border bg-black"
             type="file"
             {...register("image", { required: "Image is required" })}
@@ -106,7 +113,7 @@ export default function AdminInfoForm() {
         <br />
         <label>
           Name:
-          <input
+          <Input
             className="border bg-black"
             type="text"
             {...register("clientName", { required: "Name is required" })}
@@ -116,7 +123,7 @@ export default function AdminInfoForm() {
         <br />
         <label>
           Coaching Name:
-          <input
+          <Input
             className="border bg-black"
             type="text"
             {...register("ccName", { required: "Coaching Name is required" })}
@@ -126,7 +133,7 @@ export default function AdminInfoForm() {
         <br />
         <label>
           Contact:
-          <input
+          <Input
             className="border bg-black"
             type="text"
             {...register("contact", { required: "Contact is required" })}
@@ -136,7 +143,7 @@ export default function AdminInfoForm() {
         <br />
         <label>
           Address:
-          <input
+          <Input
             className="border bg-black"
             type="text"
             {...register("address", { required: "Address is required" })}

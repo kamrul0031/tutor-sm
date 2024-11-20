@@ -7,10 +7,12 @@ import UserInfoForm from "../ContentPages/UserInfoForm"
 import UserDashboard from "../ContentPages/UserDashboard"
 import PaymentPopComp from "../ContentPages/PaymentPopComp"
 import LogoutComp from "../ContentPages/LogoutComp"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export default function Home(){
   return(
-    <div className="h-screen flex flex-col gap-3 justify-center items-center">
+    <div className="h-screen flex flex-col gap-3 justify-center items-center dark:bg-black">
       <h1>Home</h1>
       <LoginForm/>
       <LogoutComp/>

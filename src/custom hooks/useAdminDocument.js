@@ -37,7 +37,7 @@ const useAdminDocument = () => {
     if (adminUid) {
       fetchAdminDocument();
     }
-  }, [adminUid]);
+  }, []);
 };
 
 export default useAdminDocument;
