@@ -1,11 +1,100 @@
-import React from "react";
+
+"use client"
+
+
+import conf from "@/appwrite/conf";
+import docService from "@/appwrite/docServices";
+import useCurrentUser from "@/custom hooks/useCurrentUser";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 export default function UserInfoForm() {
+  useCurrentUser()
+
+  const currentUserId = useSelector((state) => (state.auth.userData?.userId))
+  console.log("top currentUserId" , currentUserId)
+
+  const [existingDocument, setExistingDocument] = useState(null)
+
+  useEffect(() => {
+    if (currentUserId) {
+      const fetchDocument = async () => {
+        try {
+          const document = await docService.getDocument(
+            conf.appwrite_database_id,
+            conf.appwrite_users_info_collection_id,
+            currentUserId
+          );
+  
+          if (document) {
+            setExistingDocument(document);
+            alert("User Information already exists");
+          } else {
+            alert("You need to fill the form first!");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+        }
+      };
+  
+      fetchDocument();
+    }
+  }, [currentUserId]);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  
+  
+
+  const updateUserDocument = async(data) => {
+    const file = data.image[0] ? await docService.uploadFile(data.image[0]) : null ;
+
+    if(file ){
+      await docService.deleteFile(existingDocument.clientImgId)
+    }
+    const updateFormData = await docService.updateDocument(conf.appwrite_admins_info_collection_id, currentUserId, data)
+    if(updateFormData){
+      alert("user data successfully updated")
+    }else{
+      alert("user data not updated !!!")
+    }
+  }
+
+  const createUserDocument = async(data) => {
+    const file = data.image[0] ? await docService.uploadFile(data.image[0]) : null ;
+
+    if(file){
+      console.log("currentUserId" , currentUserId)
+      delete data.image
+       const createFormData = await docService.createdDocument(conf.appwrite_admins_info_collection_id, currentUserId, {
+        ...data , clientImgId:file?.$id
+       })
+       if(createFormData){
+        alert("User Information successfully created")
+       }
+    }else{
+      alert("User is not fill up ERROR , try again !!!")
+    }
+  }
+
+  const checkingForUpdateOrCreateUserDocument = async(data) => {
+    if(existingDocument){
+      updateUserDocument(data)
+    }else{
+      createUserDocument(data)
+    }
+  }
+
+
+
+
+
+
+
+
+  const onSubmit = async(data) => {
+    await checkingForUpdateOrCreateUserDocument(data)
   };
 
   return (

@@ -1,5 +1,6 @@
 import { Client, Account, ID, Databases, Storage } from "appwrite";
 import conf from "./conf";
+import { data } from "autoprefixer";
 
 class DocService {
   client = new Client();
@@ -207,9 +208,12 @@ class DocService {
    }
 
 
- async getDocuments() {
+ async getDocuments(databaseId,collectionId) {
    try {
-    await this.database.listDocuments(conf.appwrite_created_users_collection_id)
+     return await this.database.listDocuments(
+       databaseId,
+       collectionId
+     );
    } catch (error) {
      console.log("Appwrite DocService :: getDocuments :: error", error);
    }
@@ -221,10 +225,10 @@ class DocService {
 //      console.log("Appwrite DocService :: getDocuments :: error", error);
 //    }
 //  }
- async getDocument(collectionId,documentId) {
+ async getDocument(databaseId,collectionId,documentId) {
      try {
        const response = await this.database.getDocument(
-         conf.appwrite_database_id,
+         databaseId,
          collectionId,
          documentId
        );

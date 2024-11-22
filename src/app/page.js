@@ -11,14 +11,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import AdminDashboardComp from "@/ContentPages/AdminDashboardComp"
 import TempComp from "@/ContentPages/TempComp"
+import AllUsersComp from "@/ContentPages/AllUsersComp"
 
 export default function Home(){
   return(
     <div className="h-screen flex flex-col gap-3 justify-center items-center dark:bg-black">
       <h1>Home</h1>
       <LoginForm/>
-      <LogoutComp/>
-      {/* <TempComp/> */}
+       <LogoutComp/> 
+     
     </div>
   )
 }
