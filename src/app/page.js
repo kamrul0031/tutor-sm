@@ -9,6 +9,8 @@ import PaymentPopComp from "../ContentPages/PaymentPopComp"
 import LogoutComp from "../ContentPages/LogoutComp"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import AdminDashboardComp from "@/ContentPages/AdminDashboardComp"
+import TempComp from "@/ContentPages/TempComp"
 
 export default function Home(){
   return(
@@ -16,6 +18,9 @@ export default function Home(){
       <h1>Home</h1>
       <LoginForm/>
       <LogoutComp/>
+      {/* <TempComp/> */}
     </div>
   )
 }
+
+

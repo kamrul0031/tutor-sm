@@ -4,6 +4,7 @@
 "use client"
 
 import authService from "@/appwrite/authService";
+import { Button } from "@/components/ui/button";
 import { logout } from "@/store/features/authSlice";
 import { useDispatch } from "react-redux";
 
@@ -21,5 +22,5 @@ export default function LogoutComp() {
     }
     }
     
-    return <button onClick={logoutHandler}>logout</button>;
+    return <Button variant="destructive" className="w-1/2" onClick={logoutHandler}>Logout</Button>;
 }

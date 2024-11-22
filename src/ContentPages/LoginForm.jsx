@@ -19,12 +19,8 @@ export default function LoginForm() {
   } = useForm();
 
   const authStatus = useSelector((state) => state.auth.authStatus);
-  const [isAdmin, setIsAdmin] = useState(false); // State for admin status
-
-  const handleRoleChange = (event) => {
-    const selectedRole = event.target.value;
-    setIsAdmin(selectedRole === "admin")
-  }
+  
+  
 
   const router = useRouter();
   const dispatch = useDispatch();
