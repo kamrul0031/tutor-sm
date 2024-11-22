@@ -16,12 +16,12 @@ export default function TempComp() {
     address :"123 Main St, Anytown, USA",
     clientImgId :"1234567890",
     blgGrp:"O+",
-    routineShedule :[
+    tasks :[
       {
         id:1,
         date :"01/01/2023",
         time :"10:00 AM",
-        work :"add todo type"
+        task :"add task msg"
       }
     ],
     batches: [
