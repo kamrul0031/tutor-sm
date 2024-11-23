@@ -20,7 +20,6 @@ export default function AdminDashboardComp() {
   const router = useRouter();
 
   useCurrentUser();
-
   const {userData , loading } = useCurrentDocument(conf.appwrite_database_id,conf.appwrite_admins_info_collection_id)
 
 
@@ -56,6 +55,7 @@ export default function AdminDashboardComp() {
         </p>
         </div>
        <LogoutComp/>
+       <button onClick={()=> router.push("/admin-dashboard/updateInfo")}>edit</button>
       </div>
         </PopoverContent>
       </Popover>

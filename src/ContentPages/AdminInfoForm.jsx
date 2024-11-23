@@ -9,92 +9,25 @@ import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import useUserForm from "@/custom hooks/useUserForm";
 
 export default function AdminInfoForm() {
+
+  const { register, handleSubmit, formState: { errors , isSubmitting} } = useForm();
+
+
+
   useCurrentUser()
 
-  const currentUserId = useSelector((state) => (state.auth.userData?.userId))
-  console.log("top currentUserId" , currentUserId)
-
-  const [existingDocument, setExistingDocument] = useState(null)
-
-  useEffect(() => {
-    if (currentUserId) {
-      const fetchDocument = async () => {
-        try {
-          const document = await docService.getDocument(
-            conf.appwrite_admins_info_collection_id,
-            currentUserId
-          );
   
-          if (document) {
-            setExistingDocument(document);
-            alert("Admin Information already exists");
-          } else {
-            alert("You need to fill the form first!");
-          }
-        } catch (error) {
-          console.error("Error fetching document:", error);
-        }
-      };
+  const {checkingForUpdateOrCreateUserDocument} = useUserForm(conf.appwrite_database_id,conf.appwrite_admins_info_collection_id)
   
-      fetchDocument();
-    }
-  }, [currentUserId]);
-
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-
-  
-  
-
-  const updateAdminDocument = async(data) => {
-    const file = data.image[0] ? await docService.uploadFile(data.image[0]) : null ;
-
-    if(file ){
-      await docService.deleteFile(existingDocument.clientImgId)
-    }
-    const updateFormData = await docService.updateDocument(conf.appwrite_admins_info_collection_id, currentUserId, data)
-    if(updateFormData){
-      alert("admin data successfully updated")
-    }else{
-      alert("admin data not updated !!!")
-    }
-  }
-
-  const createAdminDocument = async(data) => {
-    const file = data.image[0] ? await docService.uploadFile(data.image[0]) : null ;
-
-    if(file){
-      console.log("currentUserId" , currentUserId)
-      delete data.image
-       const createFormData = await docService.createdDocument(conf.appwrite_admins_info_collection_id, currentUserId, {
-        ...data , clientImgId:file?.$id
-       })
-       if(createFormData){
-        alert("Admin Information successfully created")
-       }
-    }else{
-      alert("Admin is not fill up ERROR , try again !!!")
-    }
-  }
-
-  const checkingForUpdateOrCreateAdminDocument = async(data) => {
-    if(existingDocument){
-      updateAdminDocument(data)
-    }else{
-      createAdminDocument(data)
-    }
-  }
-
-
-
-
-
-
-
-
   const onSubmit = async(data) => {
-    await checkingForUpdateOrCreateAdminDocument(data)
+    try {
+      await checkingForUpdateOrCreateAdminDocument(data)
+    } catch (error) {
+      console.log("Unhandled error in onSubmit:", error);
+    }
   };
 
   return (
